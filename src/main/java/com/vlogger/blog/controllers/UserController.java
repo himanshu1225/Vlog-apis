@@ -18,6 +18,8 @@ import com.vlogger.blog.payloads.ApiResponse;
 import com.vlogger.blog.payloads.UserDto;
 import com.vlogger.blog.services.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -27,14 +29,14 @@ public class UserController {
 
 	// POST - createUser
 	@PostMapping("/")
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
 		UserDto createdUserDto = userService.createUser(userDto);
 		return new ResponseEntity<UserDto>(createdUserDto, HttpStatus.CREATED);
 	}
 
 	// PUT - updateUser
 	@PutMapping("/{userId}")
-	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,
+	public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,
 											  @PathVariable("userId") Integer uid) {
 		UserDto updatedUserDto = userService.updateUser(userDto, uid);
 		return ResponseEntity.ok(updatedUserDto);
