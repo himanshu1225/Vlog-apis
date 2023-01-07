@@ -2,6 +2,7 @@ package com.vlogger.blog.services.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,42 +52,53 @@ public class PostServiceImpl implements PostService {
 
 	@Override
 	public PostDto updatePost(PostDto postDto, Integer postId) {
-		// TODO Auto-generated method stub
-		return null;
+		Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "postId", postId));
+		post.setTitle(postDto.getTitle());
+		post.setContent(postDto.getContent());
+		post.setImageName(postDto.getImageName());
+		
+		Post updatedPost = this.postRepo.save(post);
+		return this.fromDomain(updatedPost);
 	}
 
 	@Override
 	public void deletePost(Integer postId) {
-		// TODO Auto-generated method stub
-
+		Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "postId", postId));
+		this.postRepo.delete(post);
 	}
 
 	@Override
 	public PostDto getPostById(Integer postId) {
-		// TODO Auto-generated method stub
-		return null;
+		Post post = this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post", "postId", postId));
+		return this.fromDomain(post);
 	}
 
 	@Override
-	public List<Post> getAllPost() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PostDto> getAllPost() {
+		List<Post> posts = this.postRepo.findAll();
+		List<PostDto> postDtos = posts.stream().map((post) -> fromDomain(post)).collect(Collectors.toList());
+		return postDtos;
 	}
 
 	@Override
-	public List<Post> getAllPostByUser(Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PostDto> getAllPostByUser(Integer userId) {
+		User user = this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User", "UserId", userId));
+		
+		List<Post> posts = this.postRepo.findByUser(user);
+		List<PostDto> postDtos = posts.stream().map((post) -> this.fromDomain(post)).collect(Collectors.toList());
+		return postDtos;
 	}
 
 	@Override
-	public List<Post> getAllPostByCategory(Integer categoryId) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PostDto> getAllPostByCategory(Integer categoryId) {
+		Category category =  this.categoryrepo.findById(categoryId).orElseThrow(()->new ResourceNotFoundException("Category", "CategoryId", categoryId));
+		List<Post> posts = this.postRepo.findByCategory(category);
+		List<PostDto> postDtos = posts.stream().map((post) -> this.fromDomain(post)).collect(Collectors.toList());
+		return postDtos;
 	}
 
 	@Override
-	public List<Post> searchPost(String keyword) {
+	public List<PostDto> searchPost(String keyword) {
 		// TODO Auto-generated method stub
 		return null;
 	}
