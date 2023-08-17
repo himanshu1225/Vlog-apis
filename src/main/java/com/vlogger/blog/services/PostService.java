@@ -3,6 +3,7 @@ package com.vlogger.blog.services;
 import java.util.List;
 
 import com.vlogger.blog.payloads.PostDto;
+import com.vlogger.blog.payloads.PostResponse;
 
 public interface PostService {
 	
@@ -14,7 +15,7 @@ public interface PostService {
 	
 	PostDto getPostById(Integer postId);
 	
-	List<PostDto> getAllPost(Integer PageNumber, Integer pageSize);
+	PostResponse getAllPost(Integer PageNumber, Integer pageSize);
 	
 	List<PostDto> getAllPostByUser(Integer userId);
 	

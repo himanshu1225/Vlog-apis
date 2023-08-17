@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vlogger.blog.payloads.ApiResponse;
 import com.vlogger.blog.payloads.PostDto;
+import com.vlogger.blog.payloads.PostResponse;
 import com.vlogger.blog.services.PostService;
 
 import jakarta.validation.Valid;
@@ -49,10 +50,10 @@ public class PostController {
 	}
 	
 	@GetMapping("/")
-	public ResponseEntity<List<PostDto>> getAllPosts(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber, 
+	public ResponseEntity<PostResponse> getAllPosts(@RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber, 
 													 @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize){
-		List<PostDto> postDtos = postService.getAllPost(pageNumber, pageSize);
-		return new ResponseEntity<List<PostDto>>(postDtos, HttpStatus.OK);
+		PostResponse  postResponse = postService.getAllPost(pageNumber, pageSize);
+		return new ResponseEntity<PostResponse>(postResponse, HttpStatus.OK);
 	}
 	
 	@GetMapping("/{postId}")

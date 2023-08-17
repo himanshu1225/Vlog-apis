@@ -16,6 +16,7 @@ import com.vlogger.blog.entities.Post;
 import com.vlogger.blog.entities.User;
 import com.vlogger.blog.exceptions.ResourceNotFoundException;
 import com.vlogger.blog.payloads.PostDto;
+import com.vlogger.blog.payloads.PostResponse;
 import com.vlogger.blog.repositories.CategoryRepo;
 import com.vlogger.blog.repositories.PostRepo;
 import com.vlogger.blog.repositories.UserRepo;
@@ -77,15 +78,21 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> getAllPost(Integer pageNumber, Integer pageSize) {
+	public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
 
 		Pageable p = PageRequest.of(pageNumber, pageSize);
 		
 		Page<Post> pagePost = this.postRepo.findAll(p);
 		List<Post> posts = pagePost.getContent();
-		
 		List<PostDto> postDtos = posts.stream().map((post) -> fromDomain(post)).collect(Collectors.toList());
-		return postDtos;
+		PostResponse postResponse = new PostResponse();
+		postResponse.setContent(postDtos);
+		postResponse.setPageNumber(pagePost.getNumber());
+		postResponse.setPageSize(pagePost.getSize());
+		postResponse.setTotalPages(pagePost.getTotalPages());
+		postResponse.setTotalElements(pagePost.getTotalElements());
+		postResponse.setLastPage(pagePost.isLast());
+		return postResponse;
 	}
 
 	@Override
